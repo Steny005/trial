@@ -12,15 +12,16 @@ Posture issues:
 Audio analysis:
 {audio_issues}
 
-For each problem:
-1. Explain why it is bad
-2. Explain how to fix it clearly
+For each:
+- What’s wrong
+- Why it’s bad
+- How to fix it
 """
 
-    response = client.chat.completions.create(
+    res = client.chat.completions.create(
         model="gpt-4o-mini",
         messages=[{"role": "user", "content": prompt}],
         temperature=0.4
     )
 
-    return response.choices[0].message.content
+    return res.choices[0].message.content

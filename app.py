@@ -13,11 +13,11 @@ def main():
         extract_audio(VIDEO_PATH, AUDIO_PATH)
 
     frames = extract_frames(VIDEO_PATH)
-    posture_issues = analyze_frames(frames)
+    posture = analyze_frames(frames)
+    audio = analyze_audio(AUDIO_PATH)
 
-    audio_issues = analyze_audio(AUDIO_PATH)
+    feedback = review_performance(posture, audio)
 
-    feedback = review_performance(posture_issues, audio_issues)
     print("\n===== AI FEEDBACK =====\n")
     print(feedback)
 

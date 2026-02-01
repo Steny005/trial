@@ -5,7 +5,6 @@ def analyze_audio(audio_path):
 
     rms = librosa.feature.rms(y=y)[0]
     avg_volume = float(rms.mean())
-
     silence_frames = rms < 0.01
     silence_ratio = float(silence_frames.sum() / len(rms))
 

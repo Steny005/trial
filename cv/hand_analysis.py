@@ -1,28 +1,28 @@
 import cv2
-import mediapipe as mp
-
-mp_hands = mp.solutions.hands.Hands(static_image_mode=True)
 
 def analyze_frames(frames):
+    """
+    Simple fallback posture analyzer.
+    This version just checks if frames are not empty
+    and returns simple posture issues.
+    """
     issues = set()
 
-    for frame in frames:
-        rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        result = mp_hands.process(rgb)
+    if not frames:
+        issues.add("No frames detected")
+        return list(issues)
 
-        if not result.multi_hand_landmarks:
-            issues.add("No visible hand gestures")
-            continue
+    # We take the first frame as a simple test
+    first = frames[0]
+    height, width = first.shape[:2]
 
-        for hand in result.multi_hand_landmarks:
-            y_vals = [lm.y for lm in hand.landmark]
-            avg_y = sum(y_vals) / len(y_vals)
+    # If more than half the image is dark, maybe posture low
+    gray = cv2.cvtColor(first, cv2.COLOR_BGR2GRAY)
+    avg_brightness = gray.mean()
 
-            if avg_y > 0.75:
-                issues.add("Hands too low")
+    if avg_brightness < 80:
+        issues.add("Frame too dark - possible camera angle problem")
 
-            spread = abs(hand.landmark[8].x - hand.landmark[4].x)
-            if spread > 0.15:
-                issues.add("Over-dramatic finger spread")
+    issues.add("Posture detection skipped (fallback)")
 
     return list(issues)
